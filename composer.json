@@ -1,5 +1,5 @@
 {
-    "name": "strack/resource",
+    "name": "strack/dms",
     "description": "strack digital media server package",
     "type": "library",
     "license": "MIT",
