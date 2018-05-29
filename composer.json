@@ -1,0 +1,14 @@
+{
+    "name": "strack/resource",
+    "description": "strack resource package",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "weijer",
+            "email": "chengwei@strack.me"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
