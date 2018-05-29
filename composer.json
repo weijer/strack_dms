@@ -1,6 +1,6 @@
 {
     "name": "strack/resource",
-    "description": "strack resource package",
+    "description": "strack digital media server package",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,5 +10,14 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "php": ">=7.0.0",
+        "toohamster/ws-http" : "1.0.2",
+        "geerlingguy/ping" : "1.1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dms\\": "src"
+        }
+    }
 }
