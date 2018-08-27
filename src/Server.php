@@ -19,31 +19,9 @@ class Server
     }
 
     /**
-     * 上传图片
-     * @param $param
-     * @return array
-     */
-    public function uploadImage($param)
-    {
-        return $this->_service->uploadImage($param);
-    }
-
-    /**
-     * 上传视频
-     * @param $param
-     * @return array
-     */
-    public function uploadVideo($param)
-    {
-        return $this->_service->uploadVideo($param);
-    }
-
-    /**
      * 获取路径
      * @param $param
      * @return array
-     * @throws \Exception
-     * @throws \JJG\InvalidArgumentException
      */
     public function getPath($param)
     {

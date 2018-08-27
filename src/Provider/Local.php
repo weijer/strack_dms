@@ -1,9 +1,9 @@
 <?php
+
 namespace DMS\Provider;
 
 use Ws\Http\Request;
 use Ws\Http\Request\Body;
-use JJG\Ping;
 
 class Local implements Method
 {
@@ -24,9 +24,10 @@ class Local implements Method
      * @param $object
      * @return mixed
      */
-    protected function objectToArray(&$object) {
-        $object =  json_decode( json_encode( $object),true);
-        return  $object;
+    protected function objectToArray(&$object)
+    {
+        $object = json_decode(json_encode($object), true);
+        return $object;
     }
 
     /**
@@ -60,71 +61,43 @@ class Local implements Method
 
 
     /**
-     * 判断服务器状态
+     * @param $url
      * @return mixed
-     * @throws \Exception
-     * @throws \JJG\InvalidArgumentException
+     */
+    function httpCode($url)
+    {
+        $ch = curl_init();
+        $timeout = 10;
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // 关闭cURL资源，并且释放系统资源
+        curl_close($ch);
+        return $httpCode;
+    }
+
+    /**
+     * 判断服务器状态
+     * @return bool
      */
     public function checkStatus()
     {
-        $replaceHttp = preg_replace('/(https|http|ftp|rtsp|mms)?:\/\//', '', $this->_url);
-        $replacePort = preg_replace('/:[0-9]+/', '', $replaceHttp);
-        $ping = new Ping($replacePort);
-        return $ping->ping();
-    }
-
-    /**
-     * 上传图片
-     * @param $param
-     * @return array
-     */
-    public function uploadImage($param)
-    {
-        $body = Body::multipart($param["data"], $param["file"]);
-        $response = $this->_http->post($this->_url . '/convert_image/?sign=' . $this->_sign, $this->_headers, $body);
-        return $this->returnData($response);
-    }
-
-    /**
-     * 上传视频
-     * @param $param
-     * @return array
-     */
-    public function uploadVideo($param)
-    {
-        $body = Body::multipart($param["data"], $param["file"]);
-        $response = $this->_http->post($this->_url . '/convert_video/?sign=' . $this->_sign, $this->_headers, $body);
-        return $this->returnData($response);
+        return $this->httpCode($this->_url) === 200 ? true : false;
     }
 
     /**
      * 获取路径
      * @param $param
      * @return array
-     * @throws \Exception
-     * @throws \JJG\InvalidArgumentException
      */
     public function getPath($param)
     {
         if ($this->checkStatus() !== false) {
-            $response = $this->_http->post($this->_url . '/get_file_path?sign=' . $this->_sign, $this->_headers, $param);
-            return $this->returnData($response);
-        } else {
-            return $this->returnData();
-        }
-    }
-
-    /**
-     * 获取视频队列
-     * @param array $param
-     * @return array
-     * @throws \Exception
-     * @throws \JJG\InvalidArgumentException
-     */
-    public function getVideoQueue($param = [])
-    {
-        if ($this->checkStatus() !== false) {
-            $response = $this->_http->post($this->_url . '/get_queue_video?sign=' . $this->_sign, $this->_headers, $param);
+            $response = $this->_http->post($this->_url . '/MediaController/get?sign=' . $this->_sign, $this->_headers, $param);
             return $this->returnData($response);
         } else {
             return $this->returnData();
@@ -138,20 +111,7 @@ class Local implements Method
      */
     public function remove($param)
     {
-        $response = $this->_http->post($this->_url . '/remove_file?sign=' . $this->_sign, $this->_headers, $param);
+        $response = $this->_http->post($this->_url . '/MediaController/remove?sign=' . $this->_sign, $this->_headers, $param);
         return $this->returnData($response);
     }
-
-    /**
-     * 重新提交转码
-     * @param $param
-     * @return array
-     */
-    public function resubmitQueue($param)
-    {
-        $response = $this->_http->post($this->_url . '/requeue?sign=' . $this->_sign, $this->_headers, $param);
-        return $this->returnData($response);
-    }
-
-
 }

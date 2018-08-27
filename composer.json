@@ -12,8 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0",
-        "toohamster/ws-http" : "1.0.2",
-        "geerlingguy/ping" : "1.1.2"
+        "toohamster/ws-http" : "1.0.2"
     },
     "autoload": {
         "psr-4": {
